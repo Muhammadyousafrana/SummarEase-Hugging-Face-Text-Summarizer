@@ -9,6 +9,9 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      HF_TOKEN: ${{ secrets.HG }}
+      HF_SPACE: MYousafRana/Demo
 
     steps:
       - name: Checkout repository
@@ -17,20 +20,16 @@ jobs:
           fetch-depth: 0
 
       - name: Install Hugging Face CLI
-        run: pip install huggingface_hub
+        run: python -m pip install --upgrade pip huggingface_hub[cli]
 
       - name: Login to Hugging Face
-        env:
-          HF: ${{ secrets.HG }}
-        run: huggingface-cli login --token ${{ secrets.HG }} --add-to-git-credential
+        run: huggingface-cli login --token "$HF_TOKEN" --add-to-git-credential
 
-      - name: Add remote
-        run: git remote add huggingface https://huggingface.co/spaces/MYousafRana/Demo
-
-      - name: Set up Hugging Face credentials
+      - name: Configure remote
         run: |
           git config --global credential.helper store
-          echo "https://huggingface.co:${{ secrets.HG }}@huggingface.co" > ~/.git-credentials
+          git remote remove huggingface || true
+          git remote add huggingface "https://huggingface.co/${HF_SPACE}.git"
 
       - name: Push to Hugging Face Space
-        run: git push --force huggingface main
+        run: git push --force huggingface HEAD:main
