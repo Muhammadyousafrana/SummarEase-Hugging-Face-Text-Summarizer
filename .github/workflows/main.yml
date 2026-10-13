@@ -1,3 +1,4 @@
+
 name: Deploy to Hugging Face Spaces
 
 on:
@@ -19,17 +20,11 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install Hugging Face CLI
-        run: python -m pip install --upgrade pip huggingface_hub[cli]
-
-      - name: Login to Hugging Face
-        run: huggingface-cli login --token "$HF_TOKEN" --add-to-git-credential
-
-      - name: Configure remote
-        run: |
-          git config --global credential.helper store
-          git remote remove huggingface || true
-          git remote add huggingface "https://huggingface.co/${HF_SPACE}.git"
-
       - name: Push to Hugging Face Space
-        run: git push --force huggingface HEAD:main
+        run: |
+          AUTH=$(printf 'hf_user:%s' "$HF_TOKEN" | base64 -w 0)
+
+          git -c http.extraheader="AUTHORIZATION: Basic $AUTH" \
+            push --force \
+            "https://huggingface.co/${HF_SPACE}.git" \
+            HEAD:main
