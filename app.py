@@ -172,10 +172,18 @@ with gr.Blocks(theme=gr.themes.Soft(), title="SummarEase — Text Summarizer") a
     )
 
     # Copy button uses a small JS snippet to access the output elem by id
+    
     copy_btn.click(
-        None,
-        _js="() => navigator.clipboard.writeText(document.getElementById('summary-output').value)",
+        fn=None,
+        js="""() => {
+            const container = document.getElementById('summary-output');
+            const textarea = container?.querySelector('textarea');
+            if (textarea) {
+                navigator.clipboard.writeText(textarea.value);
+            }
+        }"""
     )
+
 
     # Provide a lightweight model loader action so users can pre-load a model and see status
     def preload_model(model_name: str, device_choice: str, cache: dict):
