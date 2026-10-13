@@ -2,3 +2,4 @@ gradio
 transformers==4.57.3
 tensorflow
 tf-keras
+torch
