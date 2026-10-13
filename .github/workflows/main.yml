@@ -10,21 +10,21 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    env:
-      HF_TOKEN: ${{ secrets.HF_TOKEN }}
-      HF_SPACE: MYousafRana/demo
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          lfs: true
 
       - name: Push to Hugging Face Space
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          AUTH=$(printf 'hf_user:%s' "$HF_TOKEN" | base64 -w 0)
+          AUTH=$(printf 'MYousafRana:%s' "$HF_TOKEN" | base64 -w 0)
 
           git -c http.extraheader="AUTHORIZATION: Basic $AUTH" \
             push --force \
-            "https://huggingface.co/${HF_SPACE}.git" \
+            https://huggingface.co/spaces/MYousafRana/demo \
             HEAD:main
