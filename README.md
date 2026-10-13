@@ -11,6 +11,7 @@ license: cc
 ---
 
 # SummarEase — Hugging Face Text Summarizer
+[![Deploy to Hugging Face Spaces](https://github.com/Muhammadyousafrana/SummarEase-Hugging-Face-Text-Summarizer/actions/workflows/main.yml/badge.svg)](https://github.com/Muhammadyousafrana/SummarEase-Hugging-Face-Text-Summarizer/actions/workflows/main.yml)
 
 SummarEase is a lightweight Gradio application that turns long text into a concise summary using Hugging Face's text summarization models. The project is designed as a simple AI demo that can be deployed on Hugging Face Spaces and used to quickly test how summarization works in a browser-based interface.
 
