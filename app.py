@@ -1,12 +1,12 @@
 import re
 import gradio as gr
 from transformers import pipeline
+import torch
+GPU_AVAILABLE = torch.cuda.is_available()
 
 # Optional GPU detection
 try:
-    import torch
     HAS_TORCH = True
-    GPU_AVAILABLE = torch.cuda.is_available()
 except Exception:
     HAS_TORCH = False
     GPU_AVAILABLE = False
@@ -20,25 +20,36 @@ MODEL_CHOICES = [
 ]
 
 # Simple model cache stored in Gradio state
+
 def load_model(model_name: str, use_gpu: bool, cache: dict):
     device = 0 if use_gpu and GPU_AVAILABLE else -1
     key = f"{model_name}::device={device}"
-    if key in cache:
-        return cache[key], f"Model loaded (cached): {model_name} on {'GPU' if device>=0 else 'CPU'}"
 
-    # Try to instantiate the pipeline
+    if key in cache:
+        return cache[key], (
+            f"Model loaded (cached): {model_name} "
+            f"on {'GPU' if device >= 0 else 'CPU'}"
+        )
+
     try:
-        summarizer = pipeline("summarization", model=model_name, device=device)
+        summarizer = pipeline(
+            task="summarization",
+            model=model_name,
+            device=device,
+        )
     except Exception as e:
-        # Fallback: try without specifying model/device
-        try:
-            summarizer = pipeline("summarization")
-        except Exception as e2:
-            raise RuntimeError(f"Failed to load summarization pipeline: {e} / {e2}")
+        raise RuntimeError(
+            f"Could not load '{model_name}'. "
+            f"Check your requirements.txt and model compatibility. "
+            f"Original error: {type(e).__name__}: {e}"
+        ) from e
 
     cache[key] = summarizer
-    return summarizer, f"Model loaded: {model_name} on {'GPU' if device>=0 else 'CPU'}"
 
+    return summarizer, (
+        f"Model loaded: {model_name} "
+        f"on {'GPU' if device >= 0 else 'CPU'}"
+    )
 
 def chunk_text(text: str, max_chars: int = 1000):
     """Split text into chunks of up to max_chars while trying to preserve sentences."""
