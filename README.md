@@ -14,10 +14,20 @@ license: cc
 
 [![Deploy to Hugging Face Spaces](https://github.com/Muhammadyousafrana/hugging-face-demo/actions/workflows/main.yml/badge.svg)](https://github.com/Muhammadyousafrana/hugging-face-demo/actions/workflows/main.yml)
 
-# My Hugging Face Demo App
+# SummarEase — Hugging Face Text Summarizer
 
-This is a demo application deployed on Hugging Face Spaces.
+SummarEase is a lightweight Gradio demo that uses the Hugging Face Transformers summarization pipeline to convert long text into concise summaries. It's designed for quick local testing and for easy deployment to Hugging Face Spaces.
 
-# you can find the demo here
+Demo (example): https://huggingface.co/spaces/MYousafRana/demo
+(Replace the link above with your actual Space URL if different.)
 
-https://huggingface.co/spaces/MYousafRana/demo
+## Features
+- Simple web UI built with Gradio
+- Uses `transformers.pipeline("summarization")` for inference
+- Ready to deploy on Hugging Face Spaces via the included GitHub Actions workflow
+
+## Quick start (local)
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/Muhammadyousafrana/hugging-face-demo.git
+   cd hugging-face-demo
